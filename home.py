@@ -13,7 +13,7 @@ from facerec import *
 from register import *
 from dbHandler import *
 import threading  # Add this import for threading
-
+# Arshad Project
 active_page = 0
 thread_event = None
 left_frame = None
