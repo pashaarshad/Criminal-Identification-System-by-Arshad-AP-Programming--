@@ -14,4 +14,4 @@ def send_sms(message):
     else:
         print("Failed to send SMS")
 
-send_sms("Appliaction Started")
+# send_sms("Appliaction Started")
