@@ -13,7 +13,10 @@ from facerec import *
 from register import *
 from dbHandler import *
 import threading  # Add this import for threading
-# Arshad Project
+import mainsms  # Add this import for sending SMS
+import datetime  # Add this import for current time
+import socket  # Add this import for current location
+
 active_page = 0
 thread_event = None
 left_frame = None
@@ -346,6 +349,13 @@ def showCriminalProfile(name):
         tk.Label(scroll_frame, text=val.capitalize(), fg="white", font="Arial 12", bg="#202d42").grid(row=i+1, column=2, sticky='w')
 
 
+def send_sms(criminal_name):
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    current_location = socket.gethostname()
+    message = f"Criminal Detected: {criminal_name}\nLocation: {current_location}\nTime: {current_time}"
+    mainsms.send_sms(message)
+
+
 def startRecognition():
     global img_read, img_label, scroll_frame
 
@@ -371,6 +381,8 @@ def startRecognition():
         # Play beep sound immediately when faces are recognized
         if len(recognized) > 0:
             threading.Thread(target=playBeepSound).start()
+            for crim in recognized:
+                send_sms(crim[0])  # Send SMS for each recognized criminal
 
         img_size = left_frame.winfo_height() - 40
         frame = cv2.flip(frame, 1, 0)
@@ -469,6 +481,8 @@ def videoLoop(model, names):
             recog_names = [item[0] for item in recognized]
             if recognized and recog_names != old_recognized:
                 threading.Thread(target=playBeepSound).start()
+                for crim in recognized:
+                    send_sms(crim[0])  # Send SMS for each recognized criminal
 
             if(recog_names != old_recognized):
                 for wid in right_frame.winfo_children():
