@@ -32,4 +32,6 @@ def send_sms_with_image(message, image_path=None):
     except Exception as e:
         print(f"Error sending message: {str(e)}")
 
-send_sms_with_image("Application Started", "path/to/image.png")
+# Send initial notification with logo
+logo_path = os.path.join(os.path.dirname(__file__), "logo.png")
+send_sms_with_image("Application Started", logo_path)
