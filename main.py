@@ -361,28 +361,37 @@ def showCriminalProfile(name):
 
 def send_sms(criminal_name):
     # Retrieve criminal details
-    _, crim_data = retrieveData(criminal_name)
+    crim_id, crim_data = retrieveData(criminal_name)
     
     if crim_data is None:
         messagebox.showerror("Error", f"No data found for criminal: {criminal_name}")
         return
 
+    # Get profile image path
+    profile_img_path = f"profile_pics/criminal {crim_id}.png"
+    
     # Format the message
     current_time = datetime.datetime.now().strftime("%I:%M %p")
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
     current_location = "Hunsu Station, Airport, Live"
     
-    message = f"Criminal Detected: {criminal_name}\n"
+    message = f"⚠️ CRIMINAL ALERT ⚠️\n\n"
+    message += f"Criminal Detected: {criminal_name}\n"
     message += f"Location: {current_location}\n"
     message += f"Time: {current_time}\n"
     message += f"Date: {current_date}\n\n"
-    message += "Profile Details:\n"
+    message += "🔍 PROFILE DETAILS:\n"
+    message += "-------------------\n"
     
+    # Add all criminal details to message
     for key, value in crim_data.items():
         message += f"{key}: {value.capitalize() if value else '---'}\n"
-    
-    # Send the SMS
-    mainsms.send_sms(message)
+
+    # Send message with profile image if available
+    if os.path.exists(profile_img_path):
+        mainsms.send_sms_with_image(message, profile_img_path)
+    else:
+        mainsms.send_sms_with_image(message)
 
 
 def startRecognition():
