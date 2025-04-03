@@ -25,7 +25,7 @@ def send_sms_with_image(message, image_path=None):
         
         response = conn.getresponse()
         if response.status == 200:
-            print("Message sent successfully with image")
+            print("Application started successfully, message sent.")
         else:
             print(f"Failed to send message: {response.status} - {response.reason}")
             
